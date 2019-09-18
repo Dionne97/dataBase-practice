@@ -1,6 +1,10 @@
+package managementSystem;
 
+import java.sql.*;
 import java.util.Scanner;
 import java.util.HashMap;
+import java.util.logging.Logger;
+import java.util.logging.Level;
 
 public class Stock {
 
@@ -28,6 +32,22 @@ public class Stock {
 
       System.out.println("Enter Quantity:")
       quantity = scan.nextInt();
+    }
+
+    public static void initConnectionToDB() {
+
+      Connection connect = null;
+
+      try {
+        Class.forName("org.sqlite.JDBC");
+        connect = DriverManager.getConnection("jdbc:sqlite:SqliteJavaDB.db");
+
+      }catch (Exception e ) {
+        logger.log(Level.SEVERE, "Failed to create database");
+        //System.exit(0);
+      }
+
+      System.out.println("Database Created")
     }
 
   }
