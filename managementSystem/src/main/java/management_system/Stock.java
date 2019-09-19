@@ -1,4 +1,4 @@
-package managementSystem;
+package management_system;
 
 import java.sql.*;
 import java.util.Scanner;
@@ -30,9 +30,10 @@ public class Stock {
       System.out.println("Enter Medication Name:");
       medicine = scan.nextLine();
 
-      System.out.println("Enter Quantity:")
+      System.out.println("Enter Quantity:");
       quantity = scan.nextInt();
     }
+  }
 
     public static void initConnectionToDB() {
 
@@ -43,14 +44,11 @@ public class Stock {
         connect = DriverManager.getConnection("jdbc:sqlite:SqliteJavaDB.db");
 
       }catch (Exception e ) {
-        logger.log(Level.SEVERE, "Failed to create database");
+        System.out.println( "Failed to create database-----" + e.getMessage());
         //System.exit(0);
       }
 
-      System.out.println("Database Created")
+      System.out.println("Database Created");
     }
 
   }
-
-
-}
