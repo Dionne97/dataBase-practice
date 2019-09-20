@@ -23,6 +23,9 @@ public class Stock {
     int quantity = 0;
     Scanner scan = new Scanner(System.in);
 
+    initConnectionToDB();
+    tableCreation();
+
     while (true) {
       System.out.println("Enter Clinic Name:");
       clinicName = scan.nextLine();
@@ -51,4 +54,36 @@ public class Stock {
       System.out.println("Database Created");
     }
 
+  public static void tableCreation() {
+
+    Connection connect = null;
+    Statement statement = null;
+
+    try {
+      Class.forName("org.sqlite.JDBC");
+      connect = DriverManager.getConnection("jdbc:sqlite:SqliteJavaDB.db");
+      statement = connect.createStatement();
+      String querie = " Create TABLE ClinicStock" + "(c_id INTEGER PRIMARY KEY AUTOINCREMENT," + "c_name TEXT NOT NULL, " + "Nevirapine INTEGER, " + "Stavudine INTEGER, " + "Zidovine INTEGER) ";
+
+      statement.executeUpdate(querie);
+      statement.close();
+      connect.close();
+
+    } catch(Exception e ){
+      System.out.println(e.getMessage()+);
+
+    }
+  System.out.println("Table Created");
+
+  }
+  public static void addingDatatoDB(String clinic, String medicine, int quantity) {
+
+  }
+
+  public static void retrieveListOfLow() {
+
+  }
+  public static void displayWarning() {
+
+  }
   }
