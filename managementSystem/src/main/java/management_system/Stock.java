@@ -17,6 +17,8 @@ public class Stock {
     Scanner scan = new Scanner(System.in);
     int option = 0;
 
+    retrieveListOfLow();
+
     while(true){
       System.out.println("For Inserting Enter 1, For Updating Enter 2, For Retrieving Enter 3");
       option = scan.nextInt();
@@ -34,9 +36,6 @@ public class Stock {
     String medicine = null;
     int quantity = 0;
     Scanner scan = new Scanner(System.in);
-
-
-    //tableCreation();
 
     switch(n) {
       case 1:
@@ -210,16 +209,19 @@ public class Stock {
   }
 
   public static void retrieveDataPerClinic(String clinic) {
-    Statement statement = null;
+    PreparedStatement statement = null;
 
     int nev = 0;
     int stavu = 0;
     int zid = 0;
 
-    String querie = "";
+
     try {
-        statement = connect.createStatement();
-        ResultSet rs = statement.executeQuery("SELECT Nevirapine, Stavudine, Zidotabine FROM ClinicStock WHERE c_name = "+clinic+";");
+        String querie = "SELECT * FROM ClinicStock WHERE c_name = ?";
+        statement = connect.prepareStatement(querie);
+        statement.setString(1, clinic);
+        ResultSet rs = statement.executeQuery();
+
         while( rs.next()) {
           nev = rs.getInt("Nevirapine");
           stavu = rs.getInt("Stavudine");
@@ -228,12 +230,32 @@ public class Stock {
         }
         rs.close();
     }catch (Exception e) {
-      System.out.println(e.getMessage());
+      System.out.println(e.getMessage() + "--------------line234");
     }
 
   }
 
   public static void retrieveListOfLow() {
+
+    Statement statement = null;
+    String name = null;
+
+    try {
+      String querie = "SELECT c_name FROM ClinicStock WHERE (Nevirapine < 5 OR Stavudine < 5 OR Zidotabine < 5) ;";
+      statement = connect.createStatement();
+      ResultSet rs = statement.executeQuery(querie);
+      System.out.println("------------------line247");
+
+      while(rs.next()) {
+        name = rs.getString("c_name");
+        System.out.println("These Clinics are low on medication:" + name + "\n");
+      }
+      rs.close();
+
+    }catch (Exception e) {
+      System.out.println(e.getMessage() + "------------------line255");
+    }
+
 
   }
   public static void displayWarning() {
