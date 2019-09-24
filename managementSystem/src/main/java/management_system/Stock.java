@@ -5,24 +5,27 @@ import java.util.Scanner;
 import java.util.HashMap;
 import java.util.logging.Logger;
 import java.util.logging.Level;
+import java.util.ArrayList;
+import java.util.List;
+
 
 public class Stock {
 
   private static Connection connect = null;
 
-  private static HashMap<String, String> clinics = new HashMap<String, String>();
+  public static List<String> clinicsLow = new ArrayList<>();
 
   public static void main(String [] args) {
 
     Scanner scan = new Scanner(System.in);
     int option = 0;
 
-    retrieveListOfLow();
 
     while(true){
+      initConnectionToDB();
+      retrieveListOfLow();
       System.out.println("For Inserting Enter 1, For Updating Enter 2, For Retrieving Enter 3");
       option = scan.nextInt();
-      initConnectionToDB();
       getInput(option);
 
     }
@@ -235,19 +238,22 @@ public class Stock {
 
   }
 
-  public static void retrieveListOfLow() {
+  public static String retrieveListOfLow() {
 
-    Statement statement = null;
+    PreparedStatement statement = null;
     String name = null;
+    String list = "";
 
     try {
-      String querie = "SELECT c_name FROM ClinicStock WHERE (Nevirapine < 5 OR Stavudine < 5 OR Zidotabine < 5) ;";
-      statement = connect.createStatement();
-      ResultSet rs = statement.executeQuery(querie);
+      String querie = "SELECT * FROM ClinicStock WHERE Nevirapine < 5 OR Stavudine < 5 OR Zidotabine < 5;";
+      statement = connect.prepareStatement(querie);
+      ResultSet rs = statement.executeQuery();
       System.out.println("------------------line247");
 
       while(rs.next()) {
         name = rs.getString("c_name");
+        clinicsLow.add(name);
+        list = String.join("\n",clinicsLow);
         System.out.println("These Clinics are low on medication:" + name + "\n");
       }
       rs.close();
@@ -255,7 +261,7 @@ public class Stock {
     }catch (Exception e) {
       System.out.println(e.getMessage() + "------------------line255");
     }
-
+    return list;
 
   }
   public static void displayWarning() {
